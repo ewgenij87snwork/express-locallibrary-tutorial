@@ -7,21 +7,15 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-// Mongoose
-import mongoose from 'mongoose';
-
-// Set up default Mongoose connection
-var mongoDB = 'mongodb://127.0.0.1/my_database';
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
-
-// Get the default connection
-var db = mongoose.connection;
-
-// Bind connection to error event (err of connection)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 // App
 var app = express();
+
+// Mongoose
+import mongoose from 'mongoose';
+var mongoDB = 'mongodb://127.0.0.1/my_database';
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

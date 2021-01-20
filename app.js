@@ -8,6 +8,7 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
 
 // App
 var app = express();
@@ -26,17 +27,6 @@ mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
     console.error('App starting error:', err.stack);
   });
 
-
-// const MongoClient = require('mongodb').MongoClient;
-// const uri = 'mongodb+srv://ewgenij87snwork:<zzzzzz23>@cluster0.nrrkv.mongodb.net/<local_library>?retryWrites=true&w=majority';
-// const client = new MongoClient(uri, { useUnifiedTopology: true });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -49,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

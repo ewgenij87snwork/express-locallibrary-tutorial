@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -10,12 +12,30 @@ var usersRouter = require('./routes/users');
 // App
 var app = express();
 
-// Mongoose
-import mongoose from 'mongoose';
-var mongoDB = 'mongodb://127.0.0.1/my_database';
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+//Set up mongoose connection
+var mongoose = require('mongoose');
+
+var uri = process.env.DB_URI;
+mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => {
+    console.log('MongoDB connect')
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+  })
+  .catch(err => {
+    console.error('App starting error:', err.stack);
+  });
+
+
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = 'mongodb+srv://ewgenij87snwork:<zzzzzz23>@cluster0.nrrkv.mongodb.net/<local_library>?retryWrites=true&w=majority';
+// const client = new MongoClient(uri, { useUnifiedTopology: true });
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   // perform actions on the collection object
+//   client.close();
+// });
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +43,7 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -31,12 +51,12 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

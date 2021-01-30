@@ -102,6 +102,7 @@ exports.bookinstance_delete_get = function (req, res, next) {
   //   // Successful, so render.
   //   res.render('bookinstance_delete', { title: 'Delete Bookinstance', bookinstance: bookinstance });
   // }).catch(err => next(err));
+  
   async.waterfall([
     (callback) => {
       BookInstance.findById(req.params.id).then(bookinstance => callback(null, bookinstance));

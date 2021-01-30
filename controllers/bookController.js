@@ -37,7 +37,12 @@ exports.book_list = function (req, res, next) {
     .exec(function (err, list_books) {
       if (err) { return next(err); }
       //Successful, so render
-      res.render('book_list', { title: 'Book List', book_list: list_books });
+      res.render('book_list', { title: 'Book List', book_list: list_books }, (err, output) => {
+         res.send({
+           output,
+           bla: 'bla'
+         })
+      });
     });
 
 };
@@ -191,7 +196,6 @@ exports.book_delete_post = function (req, res, next) {
       BookInstance.find({ 'book': req.body.bookid }).exec(callback)
     },
   }, function (err, results) {
-    console.log(results)
     if (err) { return next(err); }
     // Success
     if (results.book_bookinstances.length > 0) {
